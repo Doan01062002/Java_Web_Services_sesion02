@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Danh sách phim</title>
+</head>
+<body>
+<h1>Danh sách phim</h1>
+
+<a th:href="@{/movies/add}">Thêm phim mới</a>
+
+<table border="1">
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Tên phim</th>
+    <th>Thể loại</th>
+    <th>Thời lượng (phút)</th>
+    <th>Hành động</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="movie : ${movies}">
+    <td th:text="${movie.id}"></td>
+    <td th:text="${movie.title}"></td>
+    <td th:text="${movie.genre}"></td>
+    <td th:text="${movie.duration}"></td>
+    <td>
+      <a th:href="@{/movies/edit/{id}(id=${movie.id})}">Sửa</a>
+      <form th:action="@{/movies/delete/{id}(id=${movie.id})}" method="post" style="display:inline;">
+        <button type="submit" onclick="return confirm('Bạn có chắc muốn xoá phim này không?')">Xoá</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

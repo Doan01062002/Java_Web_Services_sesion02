@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chỉnh sửa lịch chiếu</title>
+</head>
+<body>
+<h1>Chỉnh sửa lịch chiếu</h1>
+
+<form th:action="@{/showtimes/edit/{id}(id=${showtime.id})}" th:object="${showtime}" method="post">
+    <label>Phim:</label>
+    <select th:field="*{movie.id}">
+        <option th:each="m : ${movies}" th:value="${m.id}" th:text="${m.title}"
+                th:selected="${m.id == showtime.movie.id}"></option>
+    </select><br>
+
+    <label>Phòng chiếu:</label>
+    <select th:field="*{screenRoom.id}">
+        <option th:each="r : ${screenRooms}" th:value="${r.id}" th:text="${r.name}"
+                th:selected="${r.id == showtime.screenRoom.id}"></option>
+    </select><br>
+
+    <label>Thời gian bắt đầu:</label>
+    <input type="datetime-local" th:field="*{startTime}" /><br>
+
+    <label>Thời gian kết thúc:</label>
+    <input type="datetime-local" th:field="*{endTime}" /><br>
+
+    <label>Số ghế trống:</label>
+    <input type="number" th:field="*{numberSeatEmpty}" min="0"/><br>
+
+    <button type="submit">Cập nhật</button>
+    <a th:href="@{/showtimes}">Quay lại</a>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách lịch chiếu</title>
+    <style>
+        .filter-form {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .filter-form select, .filter-form input {
+            margin-right: 10px;
+            padding: 5px;
+        }
+        .filter-form button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>Danh sách lịch chiếu</h1>
+
+<div class="filter-form">
+    <form th:action="@{/showtimes}" method="get">
+        <select name="movieId">
+            <option value="">Tất cả phim</option>
+            <option th:each="movie : ${movies}"
+                    th:value="${movie.id}"
+                    th:text="${movie.title}"
+                    th:selected="${movieId != null and movieId == movie.id}"></option>
+        </select>
+
+        <select name="screenRoomId">
+            <option value="">Tất cả phòng chiếu</option>
+            <option th:each="screenRoom : ${screenRooms}"
+                    th:value="${screenRoom.id}"
+                    th:text="${screenRoom.name}"
+                    th:selected="${screenRoomId != null and screenRoomId == screenRoom.id}"></option>
+        </select>
+
+        <input type="date" name="showDate"
+               th:value="${showDate != null} ? ${showDate} : ''"
+               placeholder="Chọn ngày chiếu"/>
+
+        <button type="submit">Lọc</button>
+    </form>
+</div>
+
+<a th:href="@{/showtimes/add}">Thêm lịch chiếu mới</a>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Phim</th>
+        <th>Phòng chiếu</th>
+        <th>Thời gian bắt đầu</th>
+        <th>Thời gian kết thúc</th>
+        <th>Ghế trống</th>
+        <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="s : ${showtimes}">
+        <td th:text="${s.id}"></td>
+        <td th:text="${s.movie.title}"></td>
+        <td th:text="${s.screenRoom?.name} ?: 'Không có phòng chiếu'"></td>
+        <td th:text="${#temporals.format(s.startTime, 'yyyy-MM-dd HH:mm')}"></td>
+        <td th:text="${#temporals.format(s.endTime, 'yyyy-MM-dd HH:mm')}"></td>
+        <td th:text="${s.numberSeatEmpty}"></td>
+        <td>
+            <a th:href="@{/showtimes/edit/{id}(id=${s.id})}">Sửa</a>
+            <form th:action="@{/showtimes/delete/{id}(id=${s.id})}" method="post" style="display:inline">
+                <button type="submit">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
